@@ -10,7 +10,7 @@ const props = defineProps(["newTask"]);
       role="dialog" tabindex="-1">
       <div class="inner">
            <div class="form">
-                <ModalCloseButtonVue @click="$emit('closePopup')" />
+                <ModalCloseButtonVue @click="store.closeModal" />
                 <slot></slot>
            </div>
       </div>

@@ -1,7 +1,10 @@
 <script setup>
+import { reactive } from "vue";
 import {useTasksStore} from "@/stories/tasksStore.js";
 const store = useTasksStore()
-const props = defineProps(["newTask"]);
+let newTask = reactive(
+  { completed: false, name: "", description: "" }
+);
 </script>
 
 <template lang="">
@@ -9,6 +12,7 @@ const props = defineProps(["newTask"]);
         <h3>Add a new task</h3>
         <label for="title">Title *</label>
         <input
+          v-model="newTask.name"
           type="text"
           name="title"
           id="title"
@@ -17,12 +21,13 @@ const props = defineProps(["newTask"]);
         <br />
         <label for="description">Description *</label>
         <textarea
+          v-model="newTask.description"
           name="description"
           rows="4"
           id="description"
           placeholder="Enter a description..."
         /><br />
-        <button @click="addTask" class="btn gray">Add Task</button>
+        <button @click="store.addTask(newTask)" class="btn gray">Add Task</button>
       </div>
 </template>
 

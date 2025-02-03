@@ -9,31 +9,11 @@ import {useTasksStore} from "./stories/tasksStore.js";
 
 const appName = ref("Task mannager");
 
-let modalIsActivated = ref(false);
-
 const store = useTasksStore()
 
-
-
-let newTask = { completed: false };
-
-function addTask() {
-  if (!newTask.name || !newTask.description) {
-    alert("Please fill in all fields");
-    return false;
-  }
-  newTask.id = store.tasks.length;
-  store.tasks.push(newTask);
-  newTask = { completed: false };
-}
-
-function toggleCompleted(id) {
-  const task = store.tasks.map((task) => {
-    if (task.id == id) {
-      task.completed = !task.completed;
-    }
-  });
-}
+store.$subscribe((mutation, state) => {
+  localStorage.setItem('tasks', JSON.stringify(state.tasks))
+})
 
 
 </script>
@@ -47,7 +27,7 @@ function toggleCompleted(id) {
         </h1>
       </div>
       <div class="header-side">
-        <button @click="modalIsActivated = true" class="btn secondary">
+        <button @click="store.openModal" class="btn secondary">
           + Add Task
         </button>
       </div>
@@ -57,7 +37,7 @@ function toggleCompleted(id) {
 
     <div class="tasks">
       <Task
-        @toggleCompleted="toggleCompleted"
+        @toggleCompleted="store.toggleCompleted"
         v-for="task in store.filteredTasks"
         :key="task.id"
         :task="task"
@@ -65,9 +45,7 @@ function toggleCompleted(id) {
     </div>
 
     <ModalWindow
-      @closePopup="modalIsActivated = false"
-      v-if="modalIsActivated"
-    >
+      v-if="store.modalIsActivated">
       <AddTaskModal />
     </ModalWindow>
   </main>
